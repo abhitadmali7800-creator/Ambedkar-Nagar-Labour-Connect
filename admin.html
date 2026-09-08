@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>UP Service Hub - Admin</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #222;
+        }
+
+        header {
+            background: #0b4f6c;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        header p {
+            margin: 7px 0 0;
+        }
+
+        .container {
+            width: 94%;
+            max-width: 1100px;
+            margin: 25px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            color: #0b4f6c;
+            border-left: 5px solid orange;
+            padding-left: 10px;
+        }
+
+        .booking {
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 18px;
+            margin: 15px 0;
+            background: #fff;
+        }
+
+        .booking p {
+            margin: 9px 0;
+            line-height: 1.5;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
+        select,
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        select {
+            border: 1px solid #bbb;
+            background: white;
+        }
+
+        button {
+            border: none;
+            background: #0b4f6c;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: .9;
+        }
+
+        button:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
+
+        .accept-btn {
+            background: #16a34a;
+        }
+
+        .reject-btn {
+            background: #dc2626;
+        }
+
+        .assign-btn {
+            background: #2563eb;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 25px;
+            color: #666;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 5px;
+            background: #fff3cd;
+            color: #664d03;
+            font-weight: bold;
+        }
+
+        .confirmed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .assigned {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .completed {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .worker-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            background: #fff;
+        }
+
+        .worker-card p {
+            margin: 8px 0;
+        }
+
+        .worker-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .worker-buttons button {
+            margin-top: 10px;
+        }
+
+        .approveWorker {
+            background: #16a34a;
+        }
+
+        .rejectWorker {
+            background: #dc2626;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .completed-box {
+            margin-top: 15px;
+            padding: 14px;
+            background: #fef3c7;
+            border-radius: 8px;
+            color: #92400e;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>UP Service Hub</h1>
+    <p>Admin Panel</p>
+</header>
+
+
+<div class="container">
+
+    <!-- =====================================
+         CUSTOMER BOOKINGS
+    ====================================== -->
+
+    <div class="card">
+
+        <h2>Customer Bookings</h2>
+
+        <div id="bookingList">
+            Loading bookings...
+        </div>
+
+    </div>
+
+
+    <!-- =====================================
+         WORKER MANAGEMENT
+    ====================================== -->
+
+    <div class="card">
+
+        <h2>Worker Management</h2>
+
+        <div id="workerList">
+            Loading workers...
+        </div>
+
+    </div>
+
+</div>
+
+
+<script type="module">
+
+/* ==========================================
+   FIREBASE IMPORTS
+========================================== */
+
+import {
+    initializeApp
+} from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+import {
+    getFirestore,
+    collection,
+    query,
+    orderBy,
+    onSnapshot,
+    getDocs,
+    doc,
+    updateDoc
+} from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+/* ==========================================
+   FIREBASE CONFIG
+========================================== */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyD9FESo78bql5arB4TPvO7jM_Ecr4L_kbo",
+
+    authDomain:
+        "ambedkar-nagar-labour-connet.firebaseapp.com",
+
+    projectId:
+        "ambedkar-nagar-labour-connet",
+
+    storageBucket:
+        "ambedkar-nagar-labour-connet.firebasestorage.app",
+
+    messagingSenderId:
+        "413646541836",
+
+    appId:
+        "1:413646541836:web:e799bf01f5976d7cab0a29",
+
+    measurementId:
+        "G-86DXZYKPXZ"
+
+};
+
+
+/* ==========================================
+   FIREBASE START
+========================================== */
+
+const app =
+    initializeApp(firebaseConfig);
+
+const db =
+    getFirestore(app);
+
+
+/* ==========================================
+   HTML ELEMENTS
+========================================== */
+
+const bookingList =
+    document.getElementById("bookingList");
+
+const workerList =
+    document.getElementById("workerList");
+
+
+/* ==========================================
+   WORKERS
+========================================== */
+
+let workers = [];
+
+
+/* ==========================================
+   LOAD WORKERS
+========================================== */
+
+async function loadWorkers() {
+
+    try {
+
+        const workerSnapshot =
+            await getDocs(
+                collection(db, "workers")
+            );
+
+        workers = [];
+
+        workerSnapshot.forEach(
+            workerDoc => {
+
+                workers.push({
+
+                    id:
+                        workerDoc.id,
+
+                    ...workerDoc.data()
+
+                });
+
+            }
+        );
+
+        renderWorkers();
+
+    } catch (error) {
+
+        console.error(
+            "WORKER LOAD ERROR:",
+            error
+        );
+
+        workerList.innerHTML = `
+            <div class="empty">
+                ❌ Workers load नहीं हो पा रहे हैं।
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* ==========================================
+   SHOW WORKERS
+========================================== */
+
+function renderWorkers() {
+
+    workerList.innerHTML = "";
+
+
+    if (workers.length === 0) {
+
+        workerList.innerHTML = `
+            <div class="empty">
+
+                <h3>No workers registered yet.</h3>
+
+                <p>
+                    पहले Worker Registration से worker जोड़ें।
+                </p>
+
+            </div>
+        `;
+
+        return;
+    }
+
+
+    workers.forEach(
+        worker => {
+
+            const card =
+                document.createElement("div");
+
+            card.className =
+                "worker-card";
+
+
+            card.innerHTML = `
+
+                <h3>
+                    ${worker.name || "Unnamed Worker"}
+                </h3>
+
+                <p>
+                    <b>Profession:</b>
+                    ${worker.profession || "Not specified"}
+                </p>
+
+                <p>
+                    <b>Mobile:</b>
+                    ${worker.mobile || "Not available"}
+                </p>
+
+                <p>
+                    <b>Email:</b>
+                    ${worker.email || "Not available"}
+                </p>
+
+                <p>
+                    <b>Address:</b>
+                    ${worker.address || "Not available"}
+                </p>
+
+                <p>
+                    <b>Status:</b>
+                    ${worker.status || "Pending"}
+                </p>
+
+                <div class="worker-buttons">
+
+                    <button
+                        class="approveWorker"
+                        data-id="${worker.id}"
+                    >
+                        ✓ Approve
+                    </button>
+
+                    <button
+                        class="rejectWorker"
+                        data-id="${worker.id}"
+                    >
+                        ✕ Reject
+                    </button>
+
+                </div>
+
+            `;
+
+            workerList.appendChild(card);
+
+        }
+    );
+
+
+    /* =====================================
+       APPROVE WORKER
+    ===================================== */
+
+    document
+        .querySelectorAll(".approveWorker")
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                async function() {
+
+                    const workerId =
+                        this.dataset.id;
+
+                    try {
+
+                        await updateDoc(
+
+                            doc(
+                                db,
+                                "workers",
+                                workerId
+                            ),
+
+                            {
+                                status:
+                                    "Approved"
+                            }
+
+                        );
+
+                        alert(
+                            "✓ Worker Approved"
+                        );
+
+                        await loadWorkers();
+
+                    } catch (error) {
+
+                        console.error(
+                            "APPROVE WORKER ERROR:",
+                            error
+                        );
+
+                        alert(
+                            "❌ Worker approve नहीं हो पाया।"
+                        );
+
+                    }
+
+                }
+            );
+
+        });
+
+
+    /* =====================================
+       REJECT WORKER
+    ===================================== */
+
+    document
+        .querySelectorAll(".rejectWorker")
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                async function() {
+
+                    const workerId =
+                        this.dataset.id;
+
+                    try {
+
+                        await updateDoc(
+
+                            doc(
+                                db,
+                                "workers",
+                                workerId
+                            ),
+
+                            {
+                                status:
+                                    "Rejected"
+                            }
+
+                        );
+
+                        alert(
+                            "Worker Rejected"
+                        );
+
+                        await loadWorkers();
+
+                    } catch (error) {
+
+                        console.error(
+                            "REJECT WORKER ERROR:",
+                            error
+                        );
+
+                        alert(
+                            "❌ Worker reject नहीं हो पाया।"
+                        );
+
+                    }
+
+                }
+            );
+
+        });
+
+}
+
+
+/* ==========================================
+   LOAD BOOKINGS REAL TIME
+========================================== */
+
+const bookingsQuery =
+    query(
+
+        collection(
+            db,
+            "bookings"
+        ),
+
+        orderBy(
+            "createdAt",
+            "desc"
+        )
+
+    );
+
+
+onSnapshot(
+
+    bookingsQuery,
+
+    async snapshot => {
+
+        bookingList.innerHTML = "";
+
+
+        if (snapshot.empty) {
+
+            bookingList.innerHTML = `
+                <div class="empty">
+                    अभी कोई booking नहीं है।
+                </div>
+            `;
+
+            return;
+        }
+
+
+        /* =================================
+           BOOKING CARDS
+        ================================= */
+
+        snapshot.forEach(
+            bookingDoc => {
+
+                const data =
+                    bookingDoc.data();
+
+                const bookingId =
+                    bookingDoc.id;
+
+
+                const status =
+                    data.status ||
+                    "Pending Admin";
+
+
+                const workerOptions =
+                    workers
+
+                    .filter(
+                        worker =>
+                            worker.status ===
+                            "Approved"
+                    )
+
+                    .map(
+                        worker => `
+
+                            <option
+                                value="${worker.id}"
+                            >
+
+                                ${worker.name || "Worker"}
+                                -
+                                ${worker.profession || ""}
+
+                            </option>
+
+                        `
+                    )
+
+                    .join("");
+
+
+                const card =
+                    document.createElement("div");
+
+
+                card.className =
+                    "booking";
+
+
+                let statusClass =
+                    "status";
+
+
+                if (
+                    status ===
+                    "Confirmed"
+                ) {
+
+                    statusClass =
+                        "status confirmed";
+
+                }
+
+
+                if (
+                    status ===
+                    "Worker Assigned"
+                ) {
+
+                    statusClass =
+                        "status assigned";
+
+                }
+
+
+                /* =================================
+                   COMPLETED STATUS
+                ================================= */
+
+                if (
+                    status ===
+                    "Completed"
+                ) {
+
+                    statusClass =
+                        "status completed";
+
+                }
+
+
+                if (
+                    status ===
+                    "Rejected"
+                ) {
+
+                    statusClass =
+                        "status rejected";
+
+                }
+
+
+                /* =================================
+                   ACTION BUTTON
+                ================================= */
+
+                let actionHTML = "";
+
+
+                /* PENDING */
+
+                if (
+                    status ===
+                    "Pending Admin"
+                ) {
+
+                    actionHTML = `
+
+                        <button
+                            class="accept-btn"
+                            data-id="${bookingId}"
+                        >
+                            ✓ Accept Booking
+                        </button>
+
+                        <button
+                            class="reject-btn"
+                            data-id="${bookingId}"
+                        >
+                            ✕ Reject Booking
+                        </button>
+
+                    `;
+
+                }
+
+
+                /* CONFIRMED */
+
+                else if (
+                    status ===
+                    "Confirmed"
+                ) {
+
+                    if (
+                        workers.filter(
+                            worker =>
+                                worker.status ===
+                                "Approved"
+                        ).length === 0
+                    ) {
+
+                        actionHTML = `
+
+                            <div
+                                style="
+                                    margin-top:15px;
+                                    padding:12px;
+                                    background:#fff3cd;
+                                    border-radius:8px;
+                                "
+                            >
+
+                                ⚠️ अभी कोई Approved Worker उपलब्ध नहीं है।
+
+                            </div>
+
+                        `;
+
+                    } else {
+
+                        actionHTML = `
+
+                            <select
+                                class="workerSelect"
+                                data-id="${bookingId}"
+                            >
+
+                                <option value="">
+                                    Worker चुनें
+                                </option>
+
+                                ${workerOptions}
+
+                            </select>
+
+
+                            <button
+                                class="assign-btn"
+                                data-id="${bookingId}"
+                            >
+                                🚚 Worker को भेजें
+                            </button>
+
+                        `;
+
+                    }
+
+                }
+
+
+                /* WORKER ASSIGNED */
+
+                else if (
+                    status ===
+                    "Worker Assigned"
+                ) {
+
+                    actionHTML = `
+
+                        <div
+                            style="
+                                margin-top:15px;
+                                padding:12px;
+                                background:#dcfce7;
+                                border-radius:8px;
+                            "
+                        >
+
+                            ✓ Worker को Booking भेज दी गई है।
+
+                            <br><br>
+
+                            <b>
+                                Worker:
+                            </b>
+
+                            ${
+                                data.assignedWorkerName ||
+                                "-"
+                            }
+
+                        </div>
+
+                    `;
+
+                }
+
+
+                /* =================================
+                   COMPLETED
+                ================================= */
+
+                else if (
+                    status ===
+                    "Completed"
+                ) {
+
+                    actionHTML = `
+
+                        <div class="completed-box">
+
+                            ✓ काम पूरा हो गया है।
+
+                            <br><br>
+
+                            <b>
+                                Completed By:
+                            </b>
+
+                            ${
+                                data.assignedWorkerName ||
+                                "-"
+                            }
+
+                        </div>
+
+                    `;
+
+                }
+
+
+                /* REJECTED */
+
+                else if (
+                    status ===
+                    "Rejected"
+                ) {
+
+                    actionHTML = `
+
+                        <div
+                            style="
+                                margin-top:15px;
+                                padding:12px;
+                                background:#fee2e2;
+                                border-radius:8px;
+                                color:#991b1b;
+                            "
+                        >
+
+                            ✕ Booking Rejected
+
+                        </div>
+
+                    `;
+
+                }
+
+
+                /* =================================
+                   BOOKING HTML
+                ================================= */
+
+                card.innerHTML = `
+
+                    <p>
+                        <span class="label">
+                            Booking ID:
+                        </span>
+
+                        ${bookingId}
+                    </p>
+
+
+                    <p>
+                        <span class="label">
+                            Customer Name:
+                        </span>
+
+                        ${data.customerName || "-"}
+                    </p>
+
+
+                    <p>
+                        <span class="label">
+                            Mobile:
+                        </span>
+
+                        ${data.customerMobile || "-"}
+                    </p>
+
+
+                    <p>
+                        <span class="label">
+                            Email:
+                        </span>
+
+                        ${data.customerEmail || "-"}
+                    </p>
+
+
+                    <p>
+                        <span class="label">
+                            Address:
+                        </span>
+
+                        ${data.customerAddress || "-"}
+                    </p>
+
+
+                    <p>
+                        <span class="label">
+                            Location:
+                        </span>
+
+                        ${data.customerLocation || "-"}
+                    </p>
+
+
+                    <p>
+                        <span class="label">
+                            Service:
+                        </span>
+
+                        ${data.service || "-"}
+                    </p>
+
+
+                    <p>
+                        <span class="label">
+                            Work Details:
+                        </span>
+
+                        ${data.workDetails || "-"}
+                    </p>
+
+
+                    <p>
+                        <span class="label">
+                            Booking Date:
+                        </span>
+
+                        ${data.bookingDate || "-"}
+                    </p>
+
+
+                    <p>
+                        <span class="label">
+                            Payment Mode:
+                        </span>
+
+                        ${data.paymentMode || "-"}
+                    </p>
+
+
+                    <p>
+                        <span class="label">
+                            Status:
+                        </span>
+
+                        <span class="${statusClass}">
+                            ${status}
+                        </span>
+                    </p>
+
+
+                    ${
+                        data.assignedWorkerName
+                        ? `
+
+                            <p>
+                                <span class="label">
+                                    Assigned Worker:
+                                </span>
+
+                                ${data.assignedWorkerName}
+                            </p>
+
+                        `
+                        : ""
+                    }
+
+
+                    <div
+                        style="
+                            margin-top:15px;
+                        "
+                    >
+
+                        ${actionHTML}
+
+                    </div>
+
+                `;
+
+
+                bookingList.appendChild(card);
+
+            }
+        );
+
+
+        /* =====================================
+           ACCEPT BOOKING
+        ===================================== */
+
+        document
+            .querySelectorAll(".accept-btn")
+            .forEach(button => {
+
+                button.addEventListener(
+                    "click",
+                    async function() {
+
+                        const bookingId =
+                            this.dataset.id;
+
+                        this.disabled =
+                            true;
+
+                        try {
+
+                            await updateDoc(
+
+                                doc(
+                                    db,
+                                    "bookings",
+                                    bookingId
+                                ),
+
+                                {
+
+                                    status:
+                                        "Confirmed",
+
+                                    adminStatus:
+                                        "Accepted",
+
+                                    workerStatus:
+                                        "Waiting",
+
+                                    workStatus:
+                                        "Waiting",
+
+                                    updatedAt:
+                                        new Date()
+
+                                }
+
+                            );
+
+                            alert(
+                                "✓ Booking Confirmed"
+                            );
+
+                        } catch (error) {
+
+                            console.error(
+                                "ACCEPT BOOKING ERROR:",
+                                error
+                            );
+
+                            alert(
+                                "❌ Booking accept नहीं हो पाई।"
+                            );
+
+                            this.disabled =
+                                false;
+
+                        }
+
+                    }
+                );
+
+            });
+
+
+        /* =====================================
+           REJECT BOOKING
+        ===================================== */
+
+        document
+            .querySelectorAll(".reject-btn")
+            .forEach(button => {
+
+                button.addEventListener(
+                    "click",
+                    async function() {
+
+                        const bookingId =
+                            this.dataset.id;
+
+                        this.disabled =
+                            true;
+
+                        try {
+
+                            await updateDoc(
+
+                                doc(
+                                    db,
+                                    "bookings",
+                                    bookingId
+                                ),
+
+                                {
+
+                                    status:
+                                        "Rejected",
+
+                                    adminStatus:
+                                        "Rejected",
+
+                                    workerStatus:
+                                        "Rejected",
+
+                                    workStatus:
+                                        "Cancelled",
+
+                                    updatedAt:
+                                        new Date()
+
+                                }
+
+                            );
+
+                            alert(
+                                "Booking Rejected"
+                            );
+
+                        } catch (error) {
+
+                            console.error(
+                                "REJECT BOOKING ERROR:",
+                                error
+                            );
+
+                            alert(
+                                "❌ Booking reject नहीं हो पाई।"
+                            );
+
+                            this.disabled =
+                                false;
+
+                        }
+
+                    }
+                );
+
+            });
+
+
+        /* =====================================
+           SEND BOOKING TO WORKER
+        ===================================== */
+
+        document
+            .querySelectorAll(".assign-btn")
+            .forEach(button => {
+
+                button.addEventListener(
+                    "click",
+                    async function() {
+
+                        const bookingId =
+                            this.dataset.id;
+
+
+                        const select =
+                            document.querySelector(
+                                `.workerSelect[data-id="${bookingId}"]`
+                            );
+
+
+                        if (!select) {
+
+                            alert(
+                                "Worker selection नहीं मिली।"
+                            );
+
+                            return;
+                        }
+
+
+                        const workerId =
+                            select.value;
+
+
+                        if (!workerId) {
+
+                            alert(
+                                "पहले Worker चुनें।"
+                            );
+
+                            return;
+                        }
+
+
+                        const selectedWorker =
+                            workers.find(
+                                worker =>
+                                    worker.id ===
+                                    workerId
+                            );
+
+
+                        if (!selectedWorker) {
+
+                            alert(
+                                "Worker नहीं मिला।"
+                            );
+
+                            return;
+                        }
+
+
+                        this.disabled =
+                            true;
+
+                        this.innerText =
+                            "Booking भेजी जा रही है...";
+
+
+                        try {
+
+                            await updateDoc(
+
+                                doc(
+                                    db,
+                                    "bookings",
+                                    bookingId
+                                ),
+
+                                {
+
+                                    workerId:
+                                        selectedWorker.id,
+
+                                    assignedWorkerId:
+                                        selectedWorker.id,
+
+
+                                    assignedWorkerName:
+                                        selectedWorker.name ||
+                                        "",
+
+                                    assignedWorkerMobile:
+                                        selectedWorker.mobile ||
+                                        "",
+
+                                    assignedWorkerEmail:
+                                        selectedWorker.email ||
+                                        "",
+
+
+                                    status:
+                                        "Worker Assigned",
+
+                                    adminStatus:
+                                        "Assigned",
+
+                                    workerStatus:
+                                        "New Job",
+
+                                    workStatus:
+                                        "Assigned",
+
+
+                                    updatedAt:
+                                        new Date()
+
+                                }
+
+                            );
+
+
+                            alert(
+                                "✅ Worker को पूरी Booking भेज दी गई।"
+                            );
+
+
+                        } catch (error) {
+
+                            console.error(
+                                "ASSIGN WORKER ERROR:",
+                                error
+                            );
+
+                            alert(
+                                "❌ Worker को Booking भेजी नहीं जा सकी।"
+                            );
+
+                            this.disabled =
+                                false;
+
+                            this.innerText =
+                                "🚚 Worker को भेजें";
+
+                        }
+
+                    }
+                );
+
+            });
+
+    },
+
+    error => {
+
+        console.error(
+            "BOOKING LOAD ERROR:",
+            error
+        );
+
+
+        bookingList.innerHTML = `
+
+            <div class="empty">
+
+                ❌ Booking load नहीं हो सकी।
+
+                <br><br>
+
+                Firebase configuration और
+                Firestore check करें।
+
+            </div>
+
+        `;
+
+    }
+
+);
+
+
+/* ==========================================
+   INITIAL LOAD
+========================================== */
+
+loadWorkers();
+
+
+</script>
+
+</body>
+</html>

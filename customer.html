@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>UP Service Hub - Customer</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background:
+        radial-gradient(
+            circle at top left,
+            rgba(37, 99, 235, 0.12),
+            transparent 35%
+        ),
+        linear-gradient(
+            135deg,
+            #eef6ff,
+            #ffffff,
+            #f3f7fb
+        );
+    color: #222;
+    min-height: 100vh;
+}
+
+header {
+    background: linear-gradient(
+        135deg,
+        #0b4f6c,
+        #126782
+    );
+    color: white;
+    padding: 22px 15px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 27px;
+}
+
+header p {
+    margin: 7px 0 0;
+    font-size: 14px;
+    opacity: .9;
+}
+.container {
+    width: 94%;
+    max-width: 900px;
+    margin: 25px auto 40px;
+}
+
+.card {
+    background: rgba(255,255,255,.96);
+    padding: 22px;
+    margin-bottom: 20px;
+    border-radius: 16px;
+    box-shadow:
+        0 5px 25px rgba(0,0,0,.08);
+    border: 1px solid rgba(11,79,108,.08);
+}
+
+h2 {
+    color: #0b4f6c;
+    border-left: 5px solid orange;
+    padding-left: 10px;
+    margin-top: 0;
+    font-size: 22px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #bbb;
+    border-radius: 8px;
+    font-size: 15px;
+    background: white;
+    outline: none;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #0b4f6c;
+    box-shadow: 0 0 0 3px rgba(11,79,108,.08);
+}
+
+textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+button {
+    width: 100%;
+    padding: 13px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+    transition: .2s;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    opacity: .94;
+}
+
+button:disabled {
+    background: #999 !important;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.booking-btn {
+    background: linear-gradient(
+        135deg,
+        #f97316,
+        #ea580c
+    );
+}
+
+.location-btn {
+    background: #2563eb;
+}
+
+.whatsapp-btn {
+    background: #16a34a;
+}
+
+.phone-btn {
+    background: #0b4f6c;
+}
+
+.email-btn {
+    background: #7c3aed;
+}
+
+.worker-register-btn {
+    background: linear-gradient(
+        135deg,
+        #dc2626,
+        #b91c1c
+    );
+}
+
+.success {
+    display: none;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 9px;
+    background: #dcfce7;
+    color: #166534;
+    font-weight: bold;
+    text-align: center;
+}
+
+.error {
+    display: none;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 9px;
+    background: #fee2e2;
+    color: #991b1b;
+    font-weight: bold;
+    text-align: center;
+}
+
+.care-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(3, 1fr);
+    gap: 12px;
+}
+
+.care-box {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    background: #fff;
+}
+
+.care-icon {
+    font-size: 30px;
+    margin-bottom: 7px;
+}
+
+.care-box h3 {
+    margin: 5px 0;
+    color: #0b4f6c;
+}
+
+.care-box p {
+    margin: 5px 0;
+    color: #666;
+    font-size: 13px;
+    word-break: break-word;
+}
+
+.care-box button {
+    font-size: 14px;
+}
+
+.info {
+    padding: 12px;
+    background: #eff6ff;
+    color: #1e40af;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.booking-card {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 17px;
+    margin-top: 12px;
+    background: white;
+}
+
+.booking-card p {
+    margin: 8px 0;
+    line-height: 1.5;
+}
+
+.label {
+    font-weight: bold;
+}
+
+.status {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 6px;
+    background: #fff3cd;
+    color: #664d03;
+    font-weight: bold;
+}
+
+.status.confirmed {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status.assigned {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.status.completed {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status.rejected {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.empty {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+}
+
+.footer {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-size: 13px;
+}
+
+.worker-register-card {
+    border: 2px solid #fecaca;
+    background: #fffafa;
+}
+
+@media (max-width: 700px) {
+
+    .care-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card {
+        padding: 17px;
+    }
+
+    header h1 {
+        font-size: 23px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+
+    <h1>UP Service Hub</h1>
+
+    <p>Customer Booking</p>
+
+</header>
+
+<div class="container">
+
+
+<!-- =========================================
+     NEW WORKER REGISTER
+========================================== -->
+
+<div class="card worker-register-card">
+
+    <h2>New Worker Register</h2>
+
+    <div class="info">
+        अगर आप UP Service Hub पर Worker के रूप में काम करना चाहते हैं,
+        तो नीचे दिए गए button पर click करके अपना registration करें।
+    </div>
+
+    <button
+        type="button"
+        class="worker-register-btn"
+        id="newWorkerRegisterBtn"
+    >
+        👷 New Worker Register
+    </button>
+
+</div>
+
+
+<!-- =========================================
+     BOOK SERVICE
+========================================== -->
+
+<div class="card">
+
+    <h2>Book a Service</h2>
+
+    <div class="info">
+        अपने काम की पूरी जानकारी भरें। Booking भेजने के बाद
+        Admin उसे देख सकता है और Worker को assign कर सकता है।
+    </div>
+
+    <div class="form-group">
+
+        <label>Customer Name</label>
+
+        <input
+            type="text"
+            id="customerName"
+            placeholder="Enter Your Name"
+        >
+
+    </div>
+
+    <div class="form-group">
+
+        <label>Mobile Number</label>
+
+        <input
+            type="tel"
+            id="customerMobile"
+            placeholder="Enter Mobile Number"
+            maxlength="10"
+        >
+
+    </div>
+
+    <div class="form-group">
+
+        <label>Email ID</label>
+
+        <input
+            type="email"
+            id="customerEmail"
+            placeholder="Enter Email ID"
+        >
+
+    </div>
+
+    <div class="form-group">
+
+        <label>Address</label>
+
+        <textarea
+            id="customerAddress"
+            placeholder="Enter Your Address"
+        ></textarea>
+
+    </div>
+
+    <div class="form-group">
+
+        <label>Location</label>
+
+        <input
+            type="text"
+            id="customerLocation"
+            placeholder="Enter Location"
+        >
+
+        <button
+            type="button"
+            class="location-btn"
+            id="locationBtn"
+        >
+            📍 Use My Location
+        </button>
+
+    </div>
+
+    <div class="form-group">
+
+        <label>Required Work</label>
+
+        <select id="service">
+
+            <option value="">Select Work</option>
+
+            <option value="Plumber">Plumber</option>
+
+            <option value="Electrician">Electrician</option>
+
+            <option value="Carpenter">Carpenter</option>
+
+            <option value="Painter">Painter</option>
+
+            <option value="Mason">Mason</option>
+
+            <option value="Welder">Welder</option>
+
+            <option value="Driver">Driver</option>
+
+            <option value="Cleaner">Cleaner</option>
+
+            <option value="Data Entry">Data Entry</option>
+
+            <option value="Other">Other</option>
+
+        </select>
+
+    </div>
+
+    <div class="form-group">
+
+        <label>Work Problem / Details</label>
+
+        <textarea
+            id="workDetails"
+            placeholder="अपने काम की समस्या या पूरी जानकारी यहाँ लिखें..."
+        ></textarea>
+
+    </div>
+
+    <div class="form-group">
+
+        <label>Booking Date</label>
+
+        <input
+            type="date"
+            id="bookingDate"
+        >
+
+    </div>
+
+    <div class="form-group">
+
+        <label>Payment Mode</label>
+
+        <select id="paymentMode">
+
+            <option value="">Select Payment Mode</option>
+
+            <option value="online">
+                Online Payment
+            </option>
+
+            <option value="cash">
+                Cash
+            </option>
+
+        </select>
+
+    </div>
+
+    <button
+        class="booking-btn"
+        id="sendBookingBtn"
+    >
+        📩 Send Booking
+    </button>
+
+    <div
+        class="success"
+        id="successMessage"
+    ></div>
+
+    <div
+        class="error"
+        id="errorMessage"
+    ></div>
+
+</div>
+
+
+<!-- =========================================
+     CUSTOMER CARE
+========================================== -->
+
+<div class="card">
+
+    <h2>Customer Care</h2>
+
+    <div class="info">
+        किसी भी समस्या या सहायता के लिए UP Service Hub
+        Customer Care से संपर्क करें।
+    </div>
+
+    <div class="care-grid">
+
+        <div class="care-box">
+
+            <div class="care-icon">
+                💬
+            </div>
+
+            <h3>WhatsApp</h3>
+
+            <p>
+                हमसे WhatsApp पर बात करें
+            </p>
+
+            <button
+                class="whatsapp-btn"
+                id="whatsappBtn"
+            >
+                Open WhatsApp
+            </button>
+
+        </div>
+
+        <div class="care-box">
+
+            <div class="care-icon">
+                📞
+            </div>
+
+            <h3>Phone</h3>
+
+            <p>
+                हमें सीधे Call करें
+            </p>
+
+            <button
+                class="phone-btn"
+                id="phoneBtn"
+            >
+                Call Now
+            </button>
+
+        </div>
+
+        <div class="care-box">
+
+            <div class="care-icon">
+                📧
+            </div>
+
+            <h3>Email</h3>
+
+            <p>
+                Email द्वारा संपर्क करें
+            </p>
+
+            <button
+                class="email-btn"
+                id="emailBtn"
+            >
+                Send Email
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     MY BOOKINGS
+========================================== -->
+
+<div class="card">
+
+    <h2>
+        My Booking Status
+    </h2>
+
+    <div class="info">
+        अपना mobile number डालकर अपनी bookings देख सकते हैं।
+    </div>
+
+    <div class="form-group">
+
+        <input
+            type="tel"
+            id="searchMobile"
+            placeholder="Enter Mobile Number"
+            maxlength="10"
+        >
+
+    </div>
+
+    <button
+        class="location-btn"
+        id="searchBookingBtn"
+    >
+        🔎 Check My Booking
+    </button>
+
+    <div id="customerBookings">
+
+        <div class="empty">
+            Mobile number डालकर booking status देखें।
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<div class="footer">
+
+    © 2026 UP Service Hub
+
+</div>
+
+
+<script type="module">
+
+import {
+    initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    query,
+    where,
+    getDocs,
+    serverTimestamp
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyD9FESo78bql5arB4TPvO7jM_Ecr4L_kbo",
+
+    authDomain:
+        "ambedkar-nagar-labour-connet.firebaseapp.com",
+
+    projectId:
+        "ambedkar-nagar-labour-connet",
+
+    storageBucket:
+        "ambedkar-nagar-labour-connet.firebasestorage.app",
+
+    messagingSenderId:
+        "413646541836",
+
+    appId:
+        "1:413646541836:web:e799bf01f5976d7cab0a29",
+
+    measurementId:
+        "G-86DXZYKPXZ"
+
+};
+
+
+const app =
+    initializeApp(firebaseConfig);
+
+const db =
+    getFirestore(app);
+
+
+/* ==========================================
+   CUSTOMER CARE
+========================================== */
+
+const BUSINESS_WHATSAPP =
+    "+918953702342";
+
+const BUSINESS_PHONE =
+    "+918953702342";
+
+const BUSINESS_EMAIL =
+    "upservicehub@gmail.com";
+
+
+/* ==========================================
+   NEW WORKER REGISTER
+========================================== */
+
+document
+.getElementById("newWorkerRegisterBtn")
+.addEventListener(
+    "click",
+    function() {
+
+        window.location.href =
+            "worker.html#register";
+
+    }
+);
+
+
+/* ==========================================
+   WHATSAPP
+========================================== */
+
+document
+.getElementById("whatsappBtn")
+.addEventListener(
+    "click",
+    function() {
+
+        const message =
+            encodeURIComponent(
+                "Hello UP Service Hub, मुझे customer care से सहायता चाहिए।"
+            );
+
+        const whatsappURL =
+            "https://wa.me/" +
+            BUSINESS_WHATSAPP.replace(/\D/g, "") +
+            "?text=" +
+            message;
+
+        window.open(
+            whatsappURL,
+            "_blank"
+        );
+
+    }
+);
+
+
+/* ==========================================
+   PHONE
+========================================== */
+
+document
+.getElementById("phoneBtn")
+.addEventListener(
+    "click",
+    function() {
+
+        window.location.href =
+            "tel:" +
+            BUSINESS_PHONE;
+
+    }
+);
+
+
+/* ==========================================
+   EMAIL
+========================================== */
+
+document
+.getElementById("emailBtn")
+.addEventListener(
+    "click",
+    function() {
+
+        const subject =
+            encodeURIComponent(
+                "UP Service Hub Customer Support"
+            );
+
+        const body =
+            encodeURIComponent(
+                "Hello UP Service Hub,\n\nमुझे customer care से सहायता चाहिए।\n\n"
+            );
+
+        window.location.href =
+            "mailto:" +
+            BUSINESS_EMAIL +
+            "?subject=" +
+            subject +
+            "&body=" +
+            body;
+
+    }
+);
+
+
+/* ==========================================
+   LOCATION
+========================================== */
+
+document
+.getElementById("locationBtn")
+.addEventListener(
+    "click",
+    function() {
+
+        if (!navigator.geolocation) {
+
+            alert(
+                "आपके browser में location सुविधा उपलब्ध नहीं है।"
+            );
+
+            return;
+        }
+
+        this.disabled = true;
+
+        this.innerText =
+            "📍 Location प्राप्त हो रही है...";
+
+        navigator.geolocation.getCurrentPosition(
+
+            function(position) {
+
+                const latitude =
+                    position.coords.latitude;
+
+                const longitude =
+                    position.coords.longitude;
+
+                customerLocation.value =
+                    latitude +
+                    ", " +
+                    longitude;
+
+                alert(
+                    "✅ Location मिल गई।"
+                );
+
+                document
+                .getElementById("locationBtn")
+                .disabled = false;
+
+                document
+                .getElementById("locationBtn")
+                .innerText =
+                    "📍 Use My Location";
+
+            },
+
+            function(error) {
+
+                console.error(
+                    "LOCATION ERROR:",
+                    error
+                );
+
+                alert(
+                    "❌ Location नहीं मिल सकी। Browser में location permission दें।"
+                );
+
+                document
+                .getElementById("locationBtn")
+                .disabled = false;
+
+                document
+                .getElementById("locationBtn")
+                .innerText =
+                    "📍 Use My Location";
+
+            }
+
+        );
+
+    }
+);
+
+
+/* ==========================================
+   BOOKING
+========================================== */
+
+const customerName =
+    document.getElementById("customerName");
+
+const customerMobile =
+    document.getElementById("customerMobile");
+
+const customerEmail =
+    document.getElementById("customerEmail");
+
+const customerAddress =
+    document.getElementById("customerAddress");
+
+const customerLocation =
+    document.getElementById("customerLocation");
+
+const service =
+    document.getElementById("service");
+
+const workDetails =
+    document.getElementById("workDetails");
+
+const bookingDate =
+    document.getElementById("bookingDate");
+
+const paymentMode =
+    document.getElementById("paymentMode");
+
+const sendBookingBtn =
+    document.getElementById("sendBookingBtn");
+
+const successMessage =
+    document.getElementById("successMessage");
+
+const errorMessage =
+    document.getElementById("errorMessage");
+
+
+sendBookingBtn
+.addEventListener(
+    "click",
+    async function() {
+
+        successMessage.style.display =
+            "none";
+
+        errorMessage.style.display =
+            "none";
+
+        const name =
+            customerName.value.trim();
+
+        const mobile =
+            customerMobile.value.trim();
+
+        const email =
+            customerEmail.value.trim();
+
+        const address =
+            customerAddress.value.trim();
+
+        const location =
+            customerLocation.value.trim();
+
+        const selectedService =
+            service.value;
+
+        const details =
+            workDetails.value.trim();
+
+        const date =
+            bookingDate.value;
+
+        const payment =
+            paymentMode.value;
+
+
+        if (!name) {
+
+            alert("कृपया Customer Name भरें।");
+
+            customerName.focus();
+
+            return;
+        }
+
+
+        if (!/^[0-9]{10}$/.test(mobile)) {
+
+            alert(
+                "कृपया सही 10 digit Mobile Number डालें।"
+            );
+
+            customerMobile.focus();
+
+            return;
+        }
+
+
+        if (!email) {
+
+            alert(
+                "कृपया Email ID भरें।"
+            );
+
+            customerEmail.focus();
+
+            return;
+        }
+
+
+        if (!address) {
+
+            alert(
+                "कृपया Address भरें।"
+            );
+
+            customerAddress.focus();
+
+            return;
+        }
+
+
+        if (!selectedService) {
+
+            alert(
+                "कृपया Required Work चुनें।"
+            );
+
+            service.focus();
+
+            return;
+        }
+
+
+        if (!details) {
+
+            alert(
+                "कृपया Work Problem / Details लिखें।"
+            );
+
+            workDetails.focus();
+
+            return;
+        }
+
+
+        if (!date) {
+
+            alert(
+                "कृपया Booking Date चुनें।"
+            );
+
+            bookingDate.focus();
+
+            return;
+        }
+
+
+        if (!payment) {
+
+            alert(
+                "कृपया Payment Mode चुनें।"
+            );
+
+            paymentMode.focus();
+
+            return;
+        }
+
+
+        this.disabled = true;
+
+        this.innerText =
+            "Booking भेजी जा रही है...";
+
+
+        try {
+
+            const bookingData = {
+
+                customerName:
+                    name,
+
+                customerMobile:
+                    mobile,
+
+                customerEmail:
+                    email,
+
+                customerAddress:
+                    address,
+
+                customerLocation:
+                    location,
+
+                service:
+                    selectedService,
+
+                workDetails:
+                    details,
+
+                bookingDate:
+                    date,
+
+                paymentMode:
+                    payment,
+
+                status:
+                    "Pending Admin",
+
+                adminStatus:
+                    "Pending",
+
+                workerStatus:
+                    "Waiting",
+
+                workStatus:
+                    "Waiting",
+
+                assignedWorkerId:
+                    "",
+
+                assignedWorkerName:
+                    "",
+
+                createdAt:
+                    serverTimestamp(),
+
+                updatedAt:
+                    serverTimestamp()
+
+            };
+
+
+            const bookingRef =
+                await addDoc(
+
+                    collection(
+                        db,
+                        "bookings"
+                    ),
+
+                    bookingData
+
+                );
+
+
+            successMessage.innerHTML =
+                "✅ आपकी booking successfully भेज दी गई।" +
+                "<br><br>" +
+                "Booking ID: " +
+                bookingRef.id;
+
+            successMessage.style.display =
+                "block";
+
+
+            alert(
+                "✅ Booking successfully भेज दी गई।"
+            );
+
+
+            customerName.value = "";
+            customerMobile.value = "";
+            customerEmail.value = "";
+            customerAddress.value = "";
+            customerLocation.value = "";
+            service.value = "";
+            workDetails.value = "";
+            bookingDate.value = "";
+            paymentMode.value = "";
+
+
+        } catch (error) {
+
+            console.error(
+                "BOOKING ERROR:",
+                error
+            );
+
+            errorMessage.innerHTML =
+                "❌ Booking भेजने में समस्या हुई।<br><br>" +
+                error.message;
+
+            errorMessage.style.display =
+                "block";
+
+            alert(
+                "❌ Booking भेजी नहीं जा सकी।"
+            );
+
+        } finally {
+
+            this.disabled = false;
+
+            this.innerText =
+                "📩 Send Booking";
+
+        }
+
+    }
+);
+
+
+/* ==========================================
+   CHECK BOOKINGS
+========================================== */
+
+document
+.getElementById("searchBookingBtn")
+.addEventListener(
+    "click",
+    async function() {
+
+        const mobile =
+            document
+            .getElementById("searchMobile")
+            .value
+            .trim();
+
+        const bookingContainer =
+            document.getElementById(
+                "customerBookings"
+            );
+
+
+        if (!/^[0-9]{10}$/.test(mobile)) {
+
+            alert(
+                "कृपया सही 10 digit Mobile Number डालें।"
+            );
+
+            return;
+        }
+
+
+        this.disabled = true;
+
+        this.innerText =
+            "Booking खोजी जा रही है...";
+
+
+        bookingContainer.innerHTML =
+            `
+            <div class="empty">
+                Loading...
+            </div>
+            `;
+
+
+        try {
+
+            const q =
+                query(
+
+                    collection(
+                        db,
+                        "bookings"
+                    ),
+
+                    where(
+                        "customerMobile",
+                        "==",
+                        mobile
+                    )
+
+                );
+
+
+            const snapshot =
+                await getDocs(q);
+
+
+            bookingContainer.innerHTML =
+                "";
+
+
+            if (snapshot.empty) {
+
+                bookingContainer.innerHTML =
+                    `
+                    <div class="empty">
+                        अभी इस mobile number से कोई booking नहीं मिली।
+                    </div>
+                    `;
+
+                return;
+            }
+
+
+            snapshot.forEach(
+                bookingDoc => {
+
+                    const data =
+                        bookingDoc.data();
+
+
+                    const status =
+                        data.status ||
+                        "Pending Admin";
+
+
+                    let statusClass =
+                        "status";
+
+
+                    if (status === "Confirmed") {
+
+                        statusClass =
+                            "status confirmed";
+
+                    }
+
+
+                    if (
+                        status === "Worker Assigned" ||
+                        status === "Accepted"
+                    ) {
+
+                        statusClass =
+                            "status assigned";
+
+                    }
+
+
+                    if (status === "Completed") {
+
+                        statusClass =
+                            "status completed";
+
+                    }
+
+
+                    if (status === "Rejected") {
+
+                        statusClass =
+                            "status rejected";
+
+                    }
+
+
+                    const card =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    card.className =
+                        "booking-card";
+
+
+                    card.innerHTML = `
+
+                    <p>
+                        <span class="label">
+                            Booking ID:
+                        </span>
+
+                        ${bookingDoc.id}
+                    </p>
+
+                    <p>
+                        <span class="label">
+                            Service:
+                        </span>
+
+                        ${data.service || "-"}
+                    </p>
+
+                    <p>
+                        <span class="label">
+                            Work Details:
+                        </span>
+
+                        ${data.workDetails || "-"}
+                    </p>
+
+                    <p>
+                        <span class="label">
+                            Booking Date:
+                        </span>
+
+                        ${data.bookingDate || "-"}
+                    </p>
+
+                    <p>
+                        <span class="label">
+                            Payment Mode:
+                        </span>
+
+                        ${data.paymentMode || "-"}
+                    </p>
+
+                    <p>
+                        <span class="label">
+                            Assigned Worker:
+                        </span>
+
+                        ${data.assignedWorkerName ||
+                        "अभी assign नहीं हुआ"}
+                    </p>
+
+                    <p>
+                        <span class="label">
+                            Status:
+                        </span>
+
+                        <span class="${statusClass}">
+                            ${status}
+                        </span>
+                    </p>
+
+                    `;
+
+
+                    bookingContainer
+                    .appendChild(card);
+
+                }
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "SEARCH BOOKING ERROR:",
+                error
+            );
+
+            bookingContainer.innerHTML =
+                `
+                <div class="empty">
+                    ❌ Booking खोजने में समस्या हुई।
+                </div>
+                `;
+
+        } finally {
+
+            this.disabled = false;
+
+            this.innerText =
+                "🔎 Check My Booking";
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>

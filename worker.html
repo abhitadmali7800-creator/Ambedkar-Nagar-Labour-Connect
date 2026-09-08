@@ -1,0 +1,2515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>UP Service Hub - Worker Panel</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    margin: 0;
+
+    font-family: Arial, sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef6ff,
+            #ffffff,
+            #f3f7fb
+        );
+
+    color: #222;
+
+    min-height: 100vh;
+}
+
+header {
+
+    background:
+        linear-gradient(
+            135deg,
+            #0b4f6c,
+            #126782
+        );
+
+    color: white;
+
+    padding: 20px 15px;
+
+    text-align: center;
+
+    box-shadow:
+        0 4px 15px rgba(0,0,0,.15);
+}
+
+header h1 {
+
+    margin: 0;
+
+    font-size: 26px;
+}
+
+header p {
+
+    margin: 6px 0 0;
+
+    font-size: 14px;
+}
+
+.container {
+
+    width: 94%;
+
+    max-width: 950px;
+
+    margin: 25px auto 40px;
+}
+
+.card {
+
+    background: white;
+
+    padding: 22px;
+
+    margin-bottom: 20px;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 5px 25px rgba(0,0,0,.08);
+
+    border:
+        1px solid rgba(11,79,108,.08);
+}
+
+h2 {
+
+    color: #0b4f6c;
+
+    border-left:
+        5px solid orange;
+
+    padding-left: 10px;
+
+    margin-top: 0;
+
+    font-size: 22px;
+}
+
+.form-group {
+
+    margin-bottom: 15px;
+}
+
+label {
+
+    display: block;
+
+    font-weight: bold;
+
+    margin-bottom: 7px;
+}
+
+input,
+textarea,
+select {
+
+    width: 100%;
+
+    padding: 13px;
+
+    border:
+        1px solid #bbb;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+
+    outline: none;
+
+    background: white;
+}
+
+textarea {
+
+    min-height: 90px;
+
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+
+    border-color: #0b4f6c;
+
+    box-shadow:
+        0 0 0 3px rgba(11,79,108,.08);
+}
+
+button {
+
+    width: 100%;
+
+    padding: 13px;
+
+    margin-top: 8px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    color: white;
+}
+
+button:disabled {
+
+    background: #999 !important;
+
+    cursor: not-allowed;
+}
+
+.register-btn {
+
+    background:
+        linear-gradient(
+            135deg,
+            #dc2626,
+            #b91c1c
+        );
+}
+
+.login-btn {
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #1d4ed8
+        );
+}
+
+.accept-btn {
+
+    background: #2563eb;
+}
+
+.confirm-btn {
+
+    background: #16a34a;
+}
+
+.complete-btn {
+
+    background: #7c3aed;
+}
+
+.logout-btn {
+
+    background: #dc2626;
+}
+
+.refresh-btn {
+
+    background: #0b4f6c;
+}
+
+.location-btn {
+
+    background: #2563eb;
+}
+
+.success {
+
+    display: none;
+
+    padding: 15px;
+
+    margin-top: 15px;
+
+    border-radius: 9px;
+
+    background: #dcfce7;
+
+    color: #166534;
+
+    font-weight: bold;
+
+    text-align: center;
+}
+
+.error {
+
+    display: none;
+
+    padding: 15px;
+
+    margin-top: 15px;
+
+    border-radius: 9px;
+
+    background: #fee2e2;
+
+    color: #991b1b;
+
+    font-weight: bold;
+
+    text-align: center;
+}
+
+.info {
+
+    padding: 12px;
+
+    background: #eff6ff;
+
+    color: #1e40af;
+
+    border-radius: 8px;
+
+    margin-bottom: 15px;
+
+    font-size: 14px;
+}
+
+.worker-info {
+
+    border-left:
+        4px solid #2563eb;
+}
+
+.worker-id {
+
+    background: #f3f4f6;
+
+    padding: 10px;
+
+    border-radius: 8px;
+
+    margin-top: 10px;
+
+    font-weight: bold;
+
+    word-break: break-word;
+}
+
+.booking-card {
+
+    border:
+        1px solid #ddd;
+
+    border-left:
+        5px solid #f97316;
+
+    border-radius: 12px;
+
+    padding: 18px;
+
+    margin-top: 15px;
+
+    background: white;
+}
+
+.booking-card p {
+
+    margin: 9px 0;
+
+    line-height: 1.5;
+}
+
+.label {
+
+    font-weight: bold;
+
+    color: #0b4f6c;
+}
+
+.status {
+
+    display: inline-block;
+
+    padding: 6px 10px;
+
+    border-radius: 6px;
+
+    background: #fff3cd;
+
+    color: #664d03;
+
+    font-weight: bold;
+}
+
+.status.accepted {
+
+    background: #dbeafe;
+
+    color: #1d4ed8;
+}
+
+.status.confirmed {
+
+    background: #dcfce7;
+
+    color: #166534;
+}
+
+.status.completed {
+
+    background: #ede9fe;
+
+    color: #6d28d9;
+}
+
+.status.rejected {
+
+    background: #fee2e2;
+
+    color: #991b1b;
+}
+
+.action-buttons {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 8px;
+
+    margin-top: 15px;
+}
+
+.action-buttons button {
+
+    margin-top: 0;
+
+    font-size: 14px;
+}
+
+.empty {
+
+    text-align: center;
+
+    padding: 25px;
+
+    color: #666;
+}
+
+.hidden {
+
+    display: none !important;
+}
+
+.location-box {
+
+    padding: 12px;
+
+    background: #f8fafc;
+
+    border-radius: 8px;
+
+    margin-top: 8px;
+
+    word-break: break-word;
+}
+
+.footer {
+
+    text-align: center;
+
+    padding: 20px;
+
+    color: #666;
+
+    font-size: 13px;
+}
+
+@media(max-width:700px) {
+
+    .card {
+
+        padding: 17px;
+    }
+
+    header h1 {
+
+        font-size: 23px;
+    }
+
+    .action-buttons {
+
+        grid-template-columns: 1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<header>
+
+    <h1>UP Service Hub - Worker Panel</h1>
+
+    <p>Worker Registration & Jobs</p>
+
+</header>
+
+
+<div class="container">
+
+
+<!-- ==========================================
+     WORKER REGISTRATION
+========================================== -->
+
+<div
+    class="card"
+    id="registerSection"
+>
+
+    <h2>
+        👷 New Worker Registration
+    </h2>
+
+    <div class="info">
+
+        UP Service Hub पर Worker के रूप में register
+        होने के लिए नीचे अपनी पूरी जानकारी भरें।
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Worker Name
+        </label>
+
+        <input
+            type="text"
+            id="workerName"
+            placeholder="Enter Your Name"
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Mobile Number
+        </label>
+
+        <input
+            type="tel"
+            id="workerMobile"
+            placeholder="Enter Mobile Number"
+            maxlength="10"
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Email ID
+        </label>
+
+        <input
+            type="email"
+            id="workerEmail"
+            placeholder="Enter Email ID"
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Address
+        </label>
+
+        <textarea
+            id="workerAddress"
+            placeholder="Enter Your Full Address"
+        ></textarea>
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Location
+        </label>
+
+        <input
+            type="text"
+            id="workerLocation"
+            placeholder="Enter Location"
+        >
+
+        <button
+            type="button"
+            class="location-btn"
+            id="workerLocationBtn"
+        >
+            📍 Use My Location
+        </button>
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Profession / Work
+        </label>
+
+        <select id="workerProfession">
+
+            <option value="">
+                Select Work
+            </option>
+
+            <option value="Plumber">
+                Plumber
+            </option>
+
+            <option value="Electrician">
+                Electrician
+            </option>
+
+            <option value="Carpenter">
+                Carpenter
+            </option>
+
+            <option value="Painter">
+                Painter
+            </option>
+
+            <option value="Mason">
+                Mason
+            </option>
+
+            <option value="Welder">
+                Welder
+            </option>
+
+            <option value="Driver">
+                Driver
+            </option>
+
+            <option value="Cleaner">
+                Cleaner
+            </option>
+
+            <option value="Data Entry">
+                Data Entry
+            </option>
+
+            <option value="Other">
+                Other
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Experience
+        </label>
+
+        <select id="workerExperience">
+
+            <option value="">
+                Select Experience
+            </option>
+
+            <option value="Fresher">
+                Fresher
+            </option>
+
+            <option value="Less than 1 Year">
+                Less than 1 Year
+            </option>
+
+            <option value="1-3 Years">
+                1-3 Years
+            </option>
+
+            <option value="3-5 Years">
+                3-5 Years
+            </option>
+
+            <option value="5-10 Years">
+                5-10 Years
+            </option>
+
+            <option value="10+ Years">
+                10+ Years
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Work Details
+        </label>
+
+        <textarea
+            id="workerWorkDetails"
+            placeholder="आप कौन-कौन सा काम कर सकते हैं? अपनी skill और काम की जानकारी लिखें..."
+        ></textarea>
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Work Availability
+        </label>
+
+        <select id="workerAvailability">
+
+            <option value="">
+                Select Availability
+            </option>
+
+            <option value="Available">
+                Available
+            </option>
+
+            <option value="Currently Busy">
+                Currently Busy
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <button
+        class="register-btn"
+        id="registerWorkerBtn"
+    >
+        👷 Register as Worker
+    </button>
+
+
+    <div
+        class="success"
+        id="registerSuccess"
+    ></div>
+
+
+    <div
+        class="error"
+        id="registerError"
+    ></div>
+
+</div>
+
+
+<!-- ==========================================
+     WORKER LOGIN
+========================================== -->
+
+<div
+    class="card"
+    id="loginSection"
+>
+
+    <h2>
+        🔐 Worker Login
+    </h2>
+
+    <div class="info">
+
+        Registration के बाद मिले Worker ID से login करें।
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Worker ID
+        </label>
+
+        <input
+            type="text"
+            id="loginWorkerId"
+            placeholder="Example: USH-W-12345678"
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Mobile Number
+        </label>
+
+        <input
+            type="tel"
+            id="loginWorkerMobile"
+            placeholder="Enter Registered Mobile"
+            maxlength="10"
+        >
+
+    </div>
+
+
+    <button
+        class="login-btn"
+        id="workerLoginBtn"
+    >
+        🔐 Login
+    </button>
+
+
+    <div
+        class="error"
+        id="loginError"
+    ></div>
+
+</div>
+
+
+<!-- ==========================================
+     WORKER PANEL
+========================================== -->
+
+<div
+    class="card hidden"
+    id="panelSection"
+>
+
+    <h2>
+        👤 Worker Information
+    </h2>
+
+
+    <div class="worker-info">
+
+        <p>
+            <span class="label">
+                Name:
+            </span>
+
+            <span id="panelWorkerName">
+                -
+            </span>
+        </p>
+
+
+        <p>
+            <span class="label">
+                Mobile:
+            </span>
+
+            <span id="panelWorkerMobile">
+                -
+            </span>
+        </p>
+
+
+        <p>
+            <span class="label">
+                Profession:
+            </span>
+
+            <span id="panelWorkerProfession">
+                -
+            </span>
+        </p>
+
+
+        <p>
+            <span class="label">
+                Availability:
+            </span>
+
+            <span id="panelWorkerAvailability">
+                -
+            </span>
+        </p>
+
+
+        <div class="worker-id">
+
+            Worker ID:
+            <span id="panelWorkerId">
+                -
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <button
+        class="refresh-btn"
+        id="refreshJobsBtn"
+    >
+        🔄 Refresh Jobs
+    </button>
+
+
+    <button
+        class="logout-btn"
+        id="logoutBtn"
+    >
+        🚪 Logout
+    </button>
+
+</div>
+
+
+<!-- ==========================================
+     ASSIGNED JOBS
+========================================== -->
+
+<div
+    class="card hidden"
+    id="jobsSection"
+>
+
+    <h2>
+        📋 My Assigned Jobs
+    </h2>
+
+
+    <div
+        id="jobsContainer"
+    >
+
+        <div class="empty">
+            Jobs loading...
+        </div>
+
+    </div>
+
+</div>
+
+
+</div>
+
+
+<div class="footer">
+
+    © 2026 UP Service Hub
+
+</div>
+
+
+<script type="module">
+
+
+/* ==========================================
+   FIREBASE
+========================================== */
+
+import {
+    initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    query,
+    where,
+    getDocs,
+    doc,
+    updateDoc,
+    serverTimestamp
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyD9FESo78bql5arB4TPvO7jM_Ecr4L_kbo",
+
+    authDomain:
+        "ambedkar-nagar-labour-connet.firebaseapp.com",
+
+    projectId:
+        "ambedkar-nagar-labour-connet",
+
+    storageBucket:
+        "ambedkar-nagar-labour-connet.firebasestorage.app",
+
+    messagingSenderId:
+        "413646541836",
+
+    appId:
+        "1:413646541836:web:e799bf01f5976d7cab0a29",
+
+    measurementId:
+        "G-86DXZYKPXZ"
+
+};
+
+
+const app =
+    initializeApp(firebaseConfig);
+
+const db =
+    getFirestore(app);
+
+
+/* ==========================================
+   ELEMENTS
+========================================== */
+
+const registerSection =
+    document.getElementById(
+        "registerSection"
+    );
+
+const loginSection =
+    document.getElementById(
+        "loginSection"
+    );
+
+const panelSection =
+    document.getElementById(
+        "panelSection"
+    );
+
+const jobsSection =
+    document.getElementById(
+        "jobsSection"
+    );
+
+
+let currentWorker = null;
+
+
+/* ==========================================
+   GENERATE WORKER ID
+========================================== */
+
+function generateWorkerId() {
+
+    const randomNumber =
+        Math.floor(
+            10000000 +
+            Math.random() * 90000000
+        );
+
+    return "USH-W-" + randomNumber;
+
+}
+
+
+/* ==========================================
+   WORKER LOCATION
+========================================== */
+
+document
+.getElementById("workerLocationBtn")
+.addEventListener(
+    "click",
+    function() {
+
+        if (!navigator.geolocation) {
+
+            alert(
+                "आपके browser में location सुविधा उपलब्ध नहीं है।"
+            );
+
+            return;
+        }
+
+
+        this.disabled = true;
+
+        this.innerText =
+            "📍 Location प्राप्त हो रही है...";
+
+
+        navigator.geolocation.getCurrentPosition(
+
+            function(position) {
+
+                const latitude =
+                    position.coords.latitude;
+
+                const longitude =
+                    position.coords.longitude;
+
+
+                document
+                .getElementById(
+                    "workerLocation"
+                )
+                .value =
+                    latitude +
+                    ", " +
+                    longitude;
+
+
+                alert(
+                    "✅ Location मिल गई।"
+                );
+
+
+                const btn =
+                    document.getElementById(
+                        "workerLocationBtn"
+                    );
+
+                btn.disabled = false;
+
+                btn.innerText =
+                    "📍 Use My Location";
+
+            },
+
+            function(error) {
+
+                console.error(
+                    "WORKER LOCATION ERROR:",
+                    error
+                );
+
+
+                alert(
+                    "❌ Location नहीं मिल सकी। Browser में permission दें।"
+                );
+
+
+                const btn =
+                    document.getElementById(
+                        "workerLocationBtn"
+                    );
+
+                btn.disabled = false;
+
+                btn.innerText =
+                    "📍 Use My Location";
+
+            }
+
+        );
+
+    }
+);
+
+
+/* ==========================================
+   REGISTER WORKER
+========================================== */
+
+document
+.getElementById("registerWorkerBtn")
+.addEventListener(
+    "click",
+    async function() {
+
+        const success =
+            document.getElementById(
+                "registerSuccess"
+            );
+
+        const errorBox =
+            document.getElementById(
+                "registerError"
+            );
+
+
+        success.style.display =
+            "none";
+
+        errorBox.style.display =
+            "none";
+
+
+        const name =
+            document
+            .getElementById("workerName")
+            .value
+            .trim();
+
+
+        const mobile =
+            document
+            .getElementById("workerMobile")
+            .value
+            .trim();
+
+
+        const email =
+            document
+            .getElementById("workerEmail")
+            .value
+            .trim();
+
+
+        const address =
+            document
+            .getElementById("workerAddress")
+            .value
+            .trim();
+
+
+        const location =
+            document
+            .getElementById("workerLocation")
+            .value
+            .trim();
+
+
+        const profession =
+            document
+            .getElementById("workerProfession")
+            .value;
+
+
+        const experience =
+            document
+            .getElementById("workerExperience")
+            .value;
+
+
+        const workDetails =
+            document
+            .getElementById("workerWorkDetails")
+            .value
+            .trim();
+
+
+        const availability =
+            document
+            .getElementById("workerAvailability")
+            .value;
+
+
+        /* ==========================
+           VALIDATION
+        ========================== */
+
+        if (!name) {
+
+            alert(
+                "कृपया Worker Name भरें।"
+            );
+
+            return;
+        }
+
+
+        if (!/^[0-9]{10}$/.test(mobile)) {
+
+            alert(
+                "कृपया सही 10 digit Mobile Number डालें।"
+            );
+
+            return;
+        }
+
+
+        if (!email) {
+
+            alert(
+                "कृपया Email ID भरें।"
+            );
+
+            return;
+        }
+
+
+        if (!address) {
+
+            alert(
+                "कृपया Address भरें।"
+            );
+
+            return;
+        }
+
+
+        if (!profession) {
+
+            alert(
+                "कृपया Profession चुनें।"
+            );
+
+            return;
+        }
+
+
+        if (!experience) {
+
+            alert(
+                "कृपया Experience चुनें।"
+            );
+
+            return;
+        }
+
+
+        if (!workDetails) {
+
+            alert(
+                "कृपया Work Details भरें।"
+            );
+
+            return;
+        }
+
+
+        if (!availability) {
+
+            alert(
+                "कृपया Work Availability चुनें।"
+            );
+
+            return;
+        }
+
+
+        this.disabled = true;
+
+        this.innerText =
+            "Registration हो रही है...";
+
+
+        try {
+
+            /* ==========================
+               CHECK MOBILE
+            ========================== */
+
+            const existingQuery =
+                query(
+
+                    collection(
+                        db,
+                        "workers"
+                    ),
+
+                    where(
+                        "mobile",
+                        "==",
+                        mobile
+                    )
+
+                );
+
+
+            const existingSnapshot =
+                await getDocs(
+                    existingQuery
+                );
+
+
+            if (!existingSnapshot.empty) {
+
+                alert(
+                    "इस mobile number से Worker पहले से registered है।"
+                );
+
+                return;
+            }
+
+
+            /* ==========================
+               CREATE WORKER ID
+            ========================== */
+
+            const workerId =
+                generateWorkerId();
+
+
+            /* ==========================
+               SAVE WORKER
+            ========================== */
+
+            await addDoc(
+
+                collection(
+                    db,
+                    "workers"
+                ),
+
+                {
+
+                    workerId:
+                        workerId,
+
+                    name:
+                        name,
+
+                    mobile:
+                        mobile,
+
+                    email:
+                        email,
+
+                    address:
+                        address,
+
+                    location:
+                        location,
+
+                    profession:
+                        profession,
+
+                    experience:
+                        experience,
+
+                    workDetails:
+                        workDetails,
+
+                    availability:
+                        availability,
+
+                    status:
+                        "Pending Admin Verification",
+
+                    adminStatus:
+                        "Pending",
+
+                    createdAt:
+                        serverTimestamp(),
+
+                    updatedAt:
+                        serverTimestamp()
+
+                }
+
+            );
+
+
+            /* ==========================
+               SUCCESS
+            ========================== */
+
+            success.innerHTML =
+
+                "✅ Worker Registration Successfully भेज दी गई।" +
+                "<br><br>" +
+
+                "Worker ID: " +
+                "<strong>" +
+                workerId +
+                "</strong>" +
+
+                "<br><br>" +
+
+                "Admin आपकी registration verify करेगा।" +
+
+                "<br><br>" +
+
+                "इस Worker ID को सुरक्षित रखें।";
+
+
+            success.style.display =
+                "block";
+
+
+            alert(
+                "✅ Registration successfully हो गई। आपका Worker ID है: " +
+                workerId
+            );
+
+
+            /* ==========================
+               LOGIN FIELDS AUTO FILL
+            ========================== */
+
+            document
+            .getElementById(
+                "loginWorkerId"
+            )
+            .value =
+                workerId;
+
+
+            document
+            .getElementById(
+                "loginWorkerMobile"
+            )
+            .value =
+                mobile;
+
+
+            registerSection
+            .scrollIntoView({
+                behavior: "smooth"
+            });
+
+
+        } catch (err) {
+
+            console.error(
+                "WORKER REGISTER ERROR:",
+                err
+            );
+
+
+            errorBox.innerHTML =
+                "❌ Registration में समस्या हुई।<br><br>" +
+                err.message;
+
+
+            errorBox.style.display =
+                "block";
+
+        } finally {
+
+            this.disabled = false;
+
+            this.innerText =
+                "👷 Register as Worker";
+
+        }
+
+    }
+);
+
+
+/* ==========================================
+   WORKER LOGIN
+========================================== */
+
+document
+.getElementById("workerLoginBtn")
+.addEventListener(
+    "click",
+    async function() {
+
+        const workerId =
+            document
+            .getElementById(
+                "loginWorkerId"
+            )
+            .value
+            .trim();
+
+
+        const mobile =
+            document
+            .getElementById(
+                "loginWorkerMobile"
+            )
+            .value
+            .trim();
+
+
+        const errorBox =
+            document.getElementById(
+                "loginError"
+            );
+
+
+        errorBox.style.display =
+            "none";
+
+
+        if (!workerId) {
+
+            alert(
+                "कृपया Worker ID डालें।"
+            );
+
+            return;
+        }
+
+
+        if (!/^[0-9]{10}$/.test(mobile)) {
+
+            alert(
+                "कृपया सही 10 digit Mobile Number डालें।"
+            );
+
+            return;
+        }
+
+
+        this.disabled = true;
+
+        this.innerText =
+            "Login हो रहा है...";
+
+
+        try {
+
+            const q =
+                query(
+
+                    collection(
+                        db,
+                        "workers"
+                    ),
+
+                    where(
+                        "workerId",
+                        "==",
+                        workerId
+                    ),
+
+                    where(
+                        "mobile",
+                        "==",
+                        mobile
+                    )
+
+                );
+
+
+            const snapshot =
+                await getDocs(q);
+
+
+            if (snapshot.empty) {
+
+                errorBox.innerHTML =
+                    "❌ Worker ID या Mobile Number गलत है।";
+
+                errorBox.style.display =
+                    "block";
+
+                return;
+            }
+
+
+            const workerDoc =
+                snapshot.docs[0];
+
+
+            const workerData =
+                workerDoc.data();
+
+
+            currentWorker = {
+
+                documentId:
+                    workerDoc.id,
+
+                ...workerData
+
+            };
+
+
+            localStorage.setItem(
+                "upServiceHubWorkerId",
+                currentWorker.workerId
+            );
+
+
+            localStorage.setItem(
+                "upServiceHubWorkerMobile",
+                currentWorker.mobile
+            );
+
+
+            showWorkerPanel();
+
+
+            await loadAssignedJobs();
+
+
+        } catch (err) {
+
+            console.error(
+                "WORKER LOGIN ERROR:",
+                err
+            );
+
+
+            errorBox.innerHTML =
+                "❌ Login में समस्या हुई।<br><br>" +
+                err.message;
+
+            errorBox.style.display =
+                "block";
+
+        } finally {
+
+            this.disabled = false;
+
+            this.innerText =
+                "🔐 Login";
+
+        }
+
+    }
+);
+
+
+/* ==========================================
+   SHOW WORKER PANEL
+========================================== */
+
+function showWorkerPanel() {
+
+    registerSection
+    .classList
+    .add("hidden");
+
+
+    loginSection
+    .classList
+    .add("hidden");
+
+
+    panelSection
+    .classList
+    .remove("hidden");
+
+
+    jobsSection
+    .classList
+    .remove("hidden");
+
+
+    document
+    .getElementById(
+        "panelWorkerName"
+    )
+    .innerText =
+        currentWorker.name || "-";
+
+
+    document
+    .getElementById(
+        "panelWorkerMobile"
+    )
+    .innerText =
+        currentWorker.mobile || "-";
+
+
+    document
+    .getElementById(
+        "panelWorkerProfession"
+    )
+    .innerText =
+        currentWorker.profession || "-";
+
+
+    document
+    .getElementById(
+        "panelWorkerAvailability"
+    )
+    .innerText =
+        currentWorker.availability || "-";
+
+
+    document
+    .getElementById(
+        "panelWorkerId"
+    )
+    .innerText =
+        currentWorker.workerId || "-";
+
+}
+
+
+/* ==========================================
+   LOAD ASSIGNED JOBS
+========================================== */
+
+async function loadAssignedJobs() {
+
+    if (!currentWorker) {
+
+        return;
+    }
+
+
+    const container =
+        document.getElementById(
+            "jobsContainer"
+        );
+
+
+    container.innerHTML =
+        `
+        <div class="empty">
+            Jobs loading...
+        </div>
+        `;
+
+
+    try {
+
+        /*
+         * पहले Worker ID से खोजेंगे
+         */
+
+        const q1 =
+            query(
+
+                collection(
+                    db,
+                    "bookings"
+                ),
+
+                where(
+                    "assignedWorkerId",
+                    "==",
+                    currentWorker.workerId
+                )
+
+            );
+
+
+        /*
+         * पुराने bookings के लिए
+         * Worker Name से भी खोजेंगे
+         */
+
+        const q2 =
+            query(
+
+                collection(
+                    db,
+                    "bookings"
+                ),
+
+                where(
+                    "assignedWorkerName",
+                    "==",
+                    currentWorker.name
+                )
+
+            );
+
+
+        const results1 =
+            await getDocs(q1);
+
+
+        const results2 =
+            await getDocs(q2);
+
+
+        const allDocs = new Map();
+
+
+        results1.forEach(
+            bookingDoc => {
+
+                allDocs.set(
+                    bookingDoc.id,
+                    bookingDoc
+                );
+
+            }
+        );
+
+
+        results2.forEach(
+            bookingDoc => {
+
+                allDocs.set(
+                    bookingDoc.id,
+                    bookingDoc
+                );
+
+            }
+        );
+
+
+        container.innerHTML =
+            "";
+
+
+        if (allDocs.size === 0) {
+
+            container.innerHTML =
+                `
+                <div class="empty">
+
+                    📭 अभी कोई job assign नहीं हुई है।
+
+                </div>
+                `;
+
+            return;
+        }
+
+
+        allDocs.forEach(
+            bookingDoc => {
+
+                createJobCard(
+                    bookingDoc.id,
+                    bookingDoc.data(),
+                    container
+                );
+
+            }
+        );
+
+
+    } catch (err) {
+
+        console.error(
+            "LOAD JOB ERROR:",
+            err
+        );
+
+
+        container.innerHTML =
+            `
+            <div class="empty">
+
+                ❌ Jobs load नहीं हो सकीं।
+
+                <br><br>
+
+                ${err.message}
+
+            </div>
+            `;
+
+    }
+
+}
+
+
+/* ==========================================
+   CREATE JOB CARD
+========================================== */
+
+function createJobCard(
+    bookingId,
+    data,
+    container
+) {
+
+    const card =
+        document.createElement(
+            "div"
+        );
+
+
+    card.className =
+        "booking-card";
+
+
+    const status =
+        data.status ||
+        "Worker Assigned";
+
+
+    let statusClass =
+        "status";
+
+
+    if (
+        status === "Accepted"
+    ) {
+
+        statusClass =
+            "status accepted";
+
+    }
+
+
+    if (
+        status === "Confirmed"
+    ) {
+
+        statusClass =
+            "status confirmed";
+
+    }
+
+
+    if (
+        status === "Completed"
+    ) {
+
+        statusClass =
+            "status completed";
+
+    }
+
+
+    if (
+        status === "Rejected"
+    ) {
+
+        statusClass =
+            "status rejected";
+
+    }
+
+
+    card.innerHTML = `
+
+        <p>
+            <span class="label">
+                📋 Booking ID:
+            </span>
+
+            ${bookingId}
+        </p>
+
+
+        <p>
+            <span class="label">
+                👤 Customer Name:
+            </span>
+
+            ${data.customerName || "-"}
+        </p>
+
+
+        <p>
+            <span class="label">
+                📱 Customer Mobile:
+            </span>
+
+            ${data.customerMobile || "-"}
+        </p>
+
+
+        <p>
+            <span class="label">
+                📧 Customer Email:
+            </span>
+
+            ${data.customerEmail || "-"}
+        </p>
+
+
+        <p>
+            <span class="label">
+                🏠 Customer Address:
+            </span>
+
+            ${data.customerAddress || "-"}
+        </p>
+
+
+        <p>
+            <span class="label">
+                📍 Customer Location:
+            </span>
+
+            <span class="location-box">
+                ${data.customerLocation || "-"}
+            </span>
+        </p>
+
+
+        <p>
+            <span class="label">
+                🔧 Required Work:
+            </span>
+
+            ${data.service || "-"}
+        </p>
+
+
+        <p>
+            <span class="label">
+                📝 Work Details:
+            </span>
+
+            ${data.workDetails || "-"}
+        </p>
+
+
+        <p>
+            <span class="label">
+                📅 Booking Date:
+            </span>
+
+            ${data.bookingDate || "-"}
+        </p>
+
+
+        <p>
+            <span class="label">
+                💳 Payment Mode:
+            </span>
+
+            ${data.paymentMode || "-"}
+        </p>
+
+
+        <p>
+            <span class="label">
+                👷 Worker Status:
+            </span>
+
+            <span class="${statusClass}">
+                ${status}
+            </span>
+        </p>
+
+
+        <div class="action-buttons">
+
+            <button
+                class="accept-btn"
+                data-action="accept"
+            >
+                ✅ Accept Job
+            </button>
+
+
+            <button
+                class="confirm-btn"
+                data-action="confirm"
+            >
+                🔵 Confirm Booking
+            </button>
+
+
+            <button
+                class="complete-btn"
+                data-action="complete"
+            >
+                🏁 Complete Work
+            </button>
+
+        </div>
+
+    `;
+
+
+    /* ======================================
+       BUTTONS
+    ====================================== */
+
+    const acceptButton =
+        card.querySelector(
+            '[data-action="accept"]'
+        );
+
+
+    const confirmButton =
+        card.querySelector(
+            '[data-action="confirm"]'
+        );
+
+
+    const completeButton =
+        card.querySelector(
+            '[data-action="complete"]'
+        );
+
+
+    /*
+     * Status के हिसाब से buttons
+     */
+
+    if (
+        status === "Accepted" ||
+        status === "Confirmed" ||
+        status === "Completed"
+    ) {
+
+        acceptButton.disabled =
+            true;
+
+        acceptButton.innerText =
+            "✅ Job Accepted";
+
+    }
+
+
+    if (
+        status === "Confirmed" ||
+        status === "Completed"
+    ) {
+
+        confirmButton.disabled =
+            true;
+
+        confirmButton.innerText =
+            "🔵 Booking Confirmed";
+
+    }
+
+
+    if (
+        status === "Completed"
+    ) {
+
+        completeButton.disabled =
+            true;
+
+        completeButton.innerText =
+            "🏁 Work Completed";
+
+    }
+
+
+    /*
+     * Accept
+     */
+
+    acceptButton.addEventListener(
+        "click",
+        function() {
+
+            updateBookingStatus(
+                bookingId,
+                "Accepted",
+                "Accepted"
+            );
+
+        }
+    );
+
+
+    /*
+     * Confirm
+     */
+
+    confirmButton.addEventListener(
+        "click",
+        function() {
+
+            updateBookingStatus(
+                bookingId,
+                "Confirmed",
+                "Confirmed"
+            );
+
+        }
+    );
+
+
+    /*
+     * Complete
+     */
+
+    completeButton.addEventListener(
+        "click",
+        function() {
+
+            updateBookingStatus(
+                bookingId,
+                "Completed",
+                "Completed"
+            );
+
+        }
+    );
+
+
+    container.appendChild(card);
+
+}
+
+
+/* ==========================================
+   UPDATE BOOKING STATUS
+========================================== */
+
+async function updateBookingStatus(
+    bookingId,
+    newStatus,
+    workerStatus
+) {
+
+    try {
+
+        const bookingRef =
+            doc(
+                db,
+                "bookings",
+                bookingId
+            );
+
+
+        await updateDoc(
+            bookingRef,
+            {
+
+                status:
+                    newStatus,
+
+                workerStatus:
+                    workerStatus,
+
+                updatedAt:
+                    serverTimestamp()
+
+            }
+        );
+
+
+        alert(
+            "✅ Status successfully update हो गया।"
+        );
+
+
+        await loadAssignedJobs();
+
+
+    } catch (err) {
+
+        console.error(
+            "STATUS UPDATE ERROR:",
+            err
+        );
+
+
+        alert(
+            "❌ Status update नहीं हो सका।\n\n" +
+            err.message
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   REFRESH
+========================================== */
+
+document
+.getElementById("refreshJobsBtn")
+.addEventListener(
+    "click",
+    async function() {
+
+        this.disabled = true;
+
+        this.innerText =
+            "🔄 Refresh हो रहा है...";
+
+
+        await loadAssignedJobs();
+
+
+        this.disabled = false;
+
+        this.innerText =
+            "🔄 Refresh Jobs";
+
+    }
+);
+
+
+/* ==========================================
+   LOGOUT
+========================================== */
+
+document
+.getElementById("logoutBtn")
+.addEventListener(
+    "click",
+    function() {
+
+        currentWorker = null;
+
+        localStorage.removeItem(
+            "upServiceHubWorkerId"
+        );
+
+        localStorage.removeItem(
+            "upServiceHubWorkerMobile"
+        );
+
+
+        panelSection
+        .classList
+        .add("hidden");
+
+
+        jobsSection
+        .classList
+        .add("hidden");
+
+
+        registerSection
+        .classList
+        .remove("hidden");
+
+
+        loginSection
+        .classList
+        .remove("hidden");
+
+
+        alert(
+            "Worker logout हो गया।"
+        );
+
+    }
+);
+
+
+/* ==========================================
+   AUTO LOGIN
+========================================== */
+
+async function autoLogin() {
+
+    const savedWorkerId =
+        localStorage.getItem(
+            "upServiceHubWorkerId"
+        );
+
+
+    const savedMobile =
+        localStorage.getItem(
+            "upServiceHubWorkerMobile"
+        );
+
+
+    if (
+        !savedWorkerId ||
+        !savedMobile
+    ) {
+
+        return;
+    }
+
+
+    try {
+
+        const q =
+            query(
+
+                collection(
+                    db,
+                    "workers"
+                ),
+
+                where(
+                    "workerId",
+                    "==",
+                    savedWorkerId
+                ),
+
+                where(
+                    "mobile",
+                    "==",
+                    savedMobile
+                )
+
+            );
+
+
+        const snapshot =
+            await getDocs(q);
+
+
+        if (
+            snapshot.empty
+        ) {
+
+            return;
+        }
+
+
+        const workerDoc =
+            snapshot.docs[0];
+
+
+        currentWorker = {
+
+            documentId:
+                workerDoc.id,
+
+            ...workerDoc.data()
+
+        };
+
+
+        showWorkerPanel();
+
+
+        await loadAssignedJobs();
+
+
+    } catch (err) {
+
+        console.error(
+            "AUTO LOGIN ERROR:",
+            err
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   HASH REGISTER
+========================================== */
+
+if (
+    window.location.hash ===
+    "#register"
+) {
+
+    setTimeout(
+        function() {
+
+            registerSection
+            .scrollIntoView({
+                behavior: "smooth"
+            });
+
+        },
+        300
+    );
+
+}
+
+
+autoLogin();
+
+</script>
+
+</body>
+
+</html>
