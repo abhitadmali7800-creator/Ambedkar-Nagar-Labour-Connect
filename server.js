@@ -23,8 +23,8 @@ app.use(express.static(__dirname));
 // ==========================================
 
 const razorpay = new Razorpay({
-    key_id: process.env.rzp_test_TSIYrt2OwY3brx,
-    key_secret: process.env.RAZORPAY_KEY_SECRET
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
 
