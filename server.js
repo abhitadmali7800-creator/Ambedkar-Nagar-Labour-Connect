@@ -15,6 +15,23 @@ const PORT = 3000;
 // ==========================================
 
 app.use(express.json());
+
+
+// ==========================================
+// HOME PAGE
+// ==========================================
+// MAIN URL पर Customer Panel खुलेगा
+
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "customer.html"));
+});
+
+
+// ==========================================
+// STATIC FILES
+// ==========================================
+// CSS, JS, images और बाकी HTML files के लिए
+
 app.use(express.static(__dirname));
 
 
@@ -23,8 +40,8 @@ app.use(express.static(__dirname));
 // ==========================================
 
 const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
 
@@ -39,15 +56,6 @@ const transporter = nodemailer.createTransport({
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
     }
-});
-
-
-// ==========================================
-// HOME PAGE
-// ==========================================
-
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "customer.html"));
 });
 
 
