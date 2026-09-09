@@ -23,7 +23,7 @@ app.use(express.static(__dirname));
 // ==========================================
 
 const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
+    key_id: process.env.rzp_test_TSIYrt2OwY3brx,
     key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
@@ -47,7 +47,7 @@ const transporter = nodemailer.createTransport({
 // ==========================================
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
+  res.sendFile(path.join(__dirname, "customer.html"));
 });
 
 
