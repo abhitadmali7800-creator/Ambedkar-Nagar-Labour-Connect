@@ -23,7 +23,7 @@ app.use(express.json());
 // MAIN URL पर Customer Panel खुलेगा
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "customer.html"));
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
 
