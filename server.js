@@ -6,7 +6,6 @@ require("dotenv").config();
 
 const { initializeApp, cert } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
-
 const app = express();
 const PORT = 3000;
 
@@ -18,19 +17,45 @@ app.use(express.json());
 
 
 // ==========================================
-// HOME PAGE
+// MAIN URL
+// CUSTOMER PANEL
 // ==========================================
-// MAIN URL पर Customer Panel खुलेगा
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
+    res.sendFile(path.join(__dirname, "customer.html"));
+});
+
+
+// ==========================================
+// CUSTOMER PANEL
+// ==========================================
+
+app.get("/customer", (req, res) => {
+    res.sendFile(path.join(__dirname, "customer.html"));
+});
+
+
+// ==========================================
+// WORKER PANEL
+// ==========================================
+
+app.get("/worker", (req, res) => {
+    res.sendFile(path.join(__dirname, "worker.html"));
+});
+
+
+// ==========================================
+// ADMIN PANEL
+// ==========================================
+
+app.get("/admin", (req, res) => {
+    res.sendFile(path.join(__dirname, "admin.html"));
 });
 
 
 // ==========================================
 // STATIC FILES
 // ==========================================
-// CSS, JS, images और बाकी HTML files के लिए
 
 app.use(express.static(__dirname));
 
